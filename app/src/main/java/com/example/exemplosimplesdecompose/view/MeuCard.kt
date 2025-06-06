@@ -1,5 +1,7 @@
 package com.example.exemplosimplesdecompose.view
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,9 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -23,8 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.exemplosimplesdecompose.data.Posto
+import com.example.exemplosimplesdecompose.ui.theme.Purple40
+import com.example.exemplosimplesdecompose.ui.theme.Purple80
 
 @Composable
 fun MeuCard(
@@ -32,6 +37,7 @@ fun MeuCard(
     onEditClick: (Posto) -> Unit,
     onDeleteClick: (Posto) -> Unit
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,7 +66,15 @@ fun MeuCard(
             ) {
                 Column {
                     IconButton(
-                        onClick = {  }
+                        onClick = {
+                            val url = "geo:${item.coordenadas.latitude},${item.coordenadas.longitude}"
+                            val gmmIntentUri = Uri
+                                .parse(url)
+                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
+                                setPackage("com.google.android.apps.maps")
+                            }
+                            context.startActivity(mapIntent)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
@@ -76,13 +90,13 @@ fun MeuCard(
                 Column {
                     Row {
                         Text(
-                            text = "Latitude:",
+                            text = "Valor Gasolina: R$",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = item.coordenadas.latitude.toString(),
+                            text = item.valorGasolina.toString(),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -92,13 +106,13 @@ fun MeuCard(
 
                     Row {
                         Text(
-                            text = "Longitude:",
+                            text = "Valor Álcool: R$",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = item.coordenadas.longitude.toString(),
+                            text = item.valorAlcool.toString(),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -106,30 +120,28 @@ fun MeuCard(
                 }
             }
 
+            Spacer(modifier = Modifier.height(12.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = { onEditClick(item) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Editar Item",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                Button(
+                    onClick = { onEditClick(item) },
+                    colors = ButtonColors(
+                        Purple80, Purple40, Purple80, Purple40
                     )
+                ) {
+                    Text("Editar")
                 }
+
                 Spacer(modifier = Modifier.width(8.dp))
 
-                IconButton(
+                Button(
                     onClick = { onDeleteClick(item) }
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Excluir Item",
-                        tint = MaterialTheme.colorScheme.error
-                    )
+                    Text("Excluir")
                 }
             }
         }

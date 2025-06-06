@@ -1,7 +1,5 @@
 package com.example.exemplosimplesdecompose.view
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -37,22 +34,32 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.text.trimmedLength
 import androidx.navigation.NavHostController
 import com.example.exemplosimplesdecompose.R
+import com.example.exemplosimplesdecompose.data.AppConfig
+import com.example.exemplosimplesdecompose.data.CrudPosto
+import com.example.exemplosimplesdecompose.data.Posto
+import com.example.exemplosimplesdecompose.ui.theme.Purple40
 
 @Composable
-fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean) {
+fun AlcoolGasolinaPreco(navController: NavHostController) {
     val context = LocalContext.current
+
+    val config = AppConfig(context)
+    val check = config.loadBooleanConfig("is_75_checked")
+
+    val postoService = CrudPosto(context)
+
     var alcool by remember { mutableStateOf("") }
     var gasolina by remember { mutableStateOf("") }
     var nomeDoPosto by remember { mutableStateOf("") }
-    var checkedState by remember { mutableStateOf(initialCheck) }
+    var checkedState by remember { mutableStateOf(check) }
     var textoResultado by remember { mutableStateOf("") }
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -65,8 +72,7 @@ fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean)
             Image(
                 painter = painterResource(id = R.drawable.gasstation),
                 contentDescription = "Imagem principal: Bomba de gasolina com ícone de localização",
-                modifier = Modifier
-                    .size(128.dp)
+                modifier = Modifier.size(128.dp)
             )
             OutlinedTextField(
                 value = alcool,
@@ -98,30 +104,53 @@ fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean)
 
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-                horizontalArrangement = Arrangement.Start) {
-                Text(
-                    text = "75%",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 16.dp, end = 8.dp)
-                )
-                Switch(
-                    modifier = Modifier.semantics { contentDescription = "Switch para indicar 75%" },
-                    checked = checkedState,
-                    onCheckedChange = {
-                        checkedState = it
-                        saveConfig(context, checkedState)
-                    },
-                    thumbContent = {
-                        if (checkedState) {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = null,
-                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                            )
-                        }
+                .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    Row {
+                        Text(
+                            text = "75%",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(top = 16.dp, end = 8.dp)
+                        )
+                        Switch(
+                            modifier = Modifier.semantics { contentDescription = "Switch para indicar 75%" },
+                            checked = checkedState,
+                            onCheckedChange = {
+                                checkedState = it
+                                config.saveBooleanConfig("is_75_checked", checkedState)
+                            },
+                            thumbContent = {
+                                if (checkedState) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    )
+                                }
+                            }
+                        )
                     }
-                )
+                }
+                Column {
+                    Button (
+                        onClick = {
+                            val novoPosto = Posto(
+                                nome = nomeDoPosto,
+                                valorGasolina = gasolina,
+                                valorAlcool = alcool
+                            )
+                            postoService.savePosto(novoPosto)
+                        },
+                        enabled = nomeDoPosto != "" && gasolina != "" && alcool != ""
+                    ) {
+                        Icon(
+                            Icons.Filled.Add,
+                            "Salvar Posto"
+                        )
+                    }
+                }
             }
 
             Button(
@@ -133,7 +162,7 @@ fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean)
 
                         val fator = if (checkedState) 0.75 else 0.7
 
-                        val melhor = if (resultado > fator) "gasolina" else "álcool"
+                        val melhor = if (resultado > fator) "GASOLINA" else "ÁLCOOL"
 
                         val inicio = if (nomeDoPosto.trimmedLength() > 0)
                             "No posto $nomeDoPosto"
@@ -141,7 +170,8 @@ fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean)
 
                         textoResultado = "$inicio a melhor escolha é $melhor"
                     }
-                }
+                },
+                enabled = gasolina != "" && alcool != ""
             ) {
                 Text("Calcular")
             }
@@ -149,29 +179,10 @@ fun AlcoolGasolinaPreco(navController: NavHostController, initialCheck: Boolean)
             Text(
                 text = textoResultado,
                 style = MaterialTheme.typography.bodyMedium,
+                color = Purple40,
+                fontSize = 18.sp,
                 modifier = Modifier.padding(top = 16.dp)
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                FloatingActionButton(
-                    onClick = { navController.navigate("ListaDePostos/$nomeDoPosto")},
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(Icons.Filled.Add, "Salvar Posto")
-                }
-            }
         }
     }
-}
-
-fun saveConfig(context: Context, switchState: Boolean) {
-    val sharedFileName = "config"
-    val sp: SharedPreferences = context.getSharedPreferences(sharedFileName, Context.MODE_PRIVATE)
-    val editor = sp.edit()
-    editor.putBoolean("is_75_checked", switchState)
-    editor.apply()
 }

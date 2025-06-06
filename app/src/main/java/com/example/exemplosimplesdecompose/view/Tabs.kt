@@ -20,10 +20,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.example.exemplosimplesdecompose.data.AppConfig
 
 @Composable
-fun Tabs(navController: NavHostController, lastTab: Int, check: Boolean) {
+fun Tabs(navController: NavHostController) {
     val context = LocalContext.current
+
+    val config = AppConfig(context)
+    val lastTab = config.loadIntConfig("selected_tab")
+
     val tabs = listOf("Calcular", "Postos salvos")
 
     var selectedTabIndex by remember { mutableIntStateOf(lastTab) }
@@ -40,7 +45,7 @@ fun Tabs(navController: NavHostController, lastTab: Int, check: Boolean) {
                     selected = selectedTabIndex == index,
                     onClick = {
                         selectedTabIndex = index
-                        saveIntConfig(context, "selected_tab", index)
+                        config.saveIntConfig("selected_tab", index)
                     },
                     text = { Text(title) }
                 )
@@ -48,24 +53,8 @@ fun Tabs(navController: NavHostController, lastTab: Int, check: Boolean) {
         }
 
         when (selectedTabIndex) {
-            0 -> AlcoolGasolinaPreco(navController, check)
+            0 -> AlcoolGasolinaPreco(navController)
             1 -> PostosSalvos(navController)
         }
     }
-}
-
-fun saveBooleanConfig(context: Context, chave: String, value: Boolean) {
-    val sharedFileName = "config"
-    val sp: SharedPreferences = context.getSharedPreferences(sharedFileName, Context.MODE_PRIVATE)
-    val editor = sp.edit()
-    editor.putBoolean(chave, value)
-    editor.apply()
-}
-
-fun saveIntConfig(context: Context, chave: String, value: Int) {
-    val sharedFileName = "config"
-    val sp: SharedPreferences = context.getSharedPreferences(sharedFileName, Context.MODE_PRIVATE)
-    val editor = sp.edit()
-    editor.putInt(chave, value)
-    editor.apply()
 }
