@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose.ui.theme
+package com.example.alcoolougasolina.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

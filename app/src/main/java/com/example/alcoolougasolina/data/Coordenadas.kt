@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose.data
+package com.example.alcoolougasolina.data
 import java.io.Serializable
 
 data class Coordenadas(

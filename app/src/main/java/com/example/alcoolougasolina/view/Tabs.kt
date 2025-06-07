@@ -1,9 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.exemplosimplesdecompose.view
+package com.example.alcoolougasolina.view
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,10 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.example.exemplosimplesdecompose.data.AppConfig
+import com.example.alcoolougasolina.data.AppConfig
 
 @Composable
-fun Tabs(navController: NavHostController) {
+fun Tabs() {
     val context = LocalContext.current
 
     val config = AppConfig(context)
@@ -53,8 +51,8 @@ fun Tabs(navController: NavHostController) {
         }
 
         when (selectedTabIndex) {
-            0 -> AlcoolGasolinaPreco(navController)
-            1 -> PostosSalvos(navController)
+            0 -> AlcoolGasolinaPreco()
+            1 -> PostosSalvos()
         }
     }
 }

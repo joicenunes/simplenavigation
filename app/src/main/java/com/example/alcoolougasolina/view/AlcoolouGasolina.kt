@@ -1,5 +1,6 @@
-package com.example.exemplosimplesdecompose.view
+package com.example.alcoolougasolina.view
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,21 +31,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.trimmedLength
-import androidx.navigation.NavHostController
-import com.example.exemplosimplesdecompose.R
-import com.example.exemplosimplesdecompose.data.AppConfig
-import com.example.exemplosimplesdecompose.data.CrudPosto
-import com.example.exemplosimplesdecompose.data.Posto
-import com.example.exemplosimplesdecompose.ui.theme.Purple40
+import com.example.alcoolougasolina.R
+import com.example.alcoolougasolina.data.AppConfig
+import com.example.alcoolougasolina.data.CrudPosto
+import com.example.alcoolougasolina.data.Posto
+import com.example.alcoolougasolina.ui.theme.Purple40
 
 @Composable
-fun AlcoolGasolinaPreco(navController: NavHostController) {
+fun AlcoolGasolinaPreco() {
     val context = LocalContext.current
 
     val config = AppConfig(context)
@@ -56,7 +57,11 @@ fun AlcoolGasolinaPreco(navController: NavHostController) {
     var gasolina by remember { mutableStateOf("") }
     var nomeDoPosto by remember { mutableStateOf("") }
     var checkedState by remember { mutableStateOf(check) }
-    var textoResultado by remember { mutableStateOf("") }
+
+    val placeholderResultado = stringResource(R.string.placeholder_resultado)
+    var textoResultado by remember { mutableStateOf(placeholderResultado) }
+    val descricao75p = stringResource(R.string.desc_75p)
+    val complementoResultado = stringResource(R.string.complemento_resultado)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -71,16 +76,16 @@ fun AlcoolGasolinaPreco(navController: NavHostController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.gasstation),
-                contentDescription = "Imagem principal: Bomba de gasolina com ícone de localização",
+                contentDescription = stringResource(R.string.desc_imagem_principal),
                 modifier = Modifier.size(128.dp)
             )
             OutlinedTextField(
                 value = alcool,
                 onValueChange = {
                     alcool = it
-                    textoResultado = "Vamos calcular?"
+                    textoResultado = placeholderResultado
                 },
-                label = { Text("Preço do Álcool (R$)") },
+                label = { Text(text = stringResource(id = R.string.campo_preco_alcool)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -88,16 +93,16 @@ fun AlcoolGasolinaPreco(navController: NavHostController) {
                 value = gasolina,
                 onValueChange = {
                     gasolina = it
-                    textoResultado = "Vamos calcular?"
+                    textoResultado = placeholderResultado
                 },
-                label = { Text("Preço da Gasolina (R$)") },
+                label = { Text(text = stringResource(R.string.campo_preco_gasolina)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             OutlinedTextField(
                 value = nomeDoPosto,
                 onValueChange = { nomeDoPosto = it },
-                label = { Text("Nome do Posto (Opcional))") },
+                label = { Text(stringResource(R.string.campo_nome_posto)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -115,7 +120,9 @@ fun AlcoolGasolinaPreco(navController: NavHostController) {
                             modifier = Modifier.padding(top = 16.dp, end = 8.dp)
                         )
                         Switch(
-                            modifier = Modifier.semantics { contentDescription = "Switch para indicar 75%" },
+                            modifier = Modifier.semantics {
+                                contentDescription = descricao75p
+                            },
                             checked = checkedState,
                             onCheckedChange = {
                                 checkedState = it
@@ -142,6 +149,15 @@ fun AlcoolGasolinaPreco(navController: NavHostController) {
                                 valorAlcool = alcool
                             )
                             postoService.savePosto(novoPosto)
+
+                            Toast.makeText(
+                                context,
+                                "${novoPosto.nome} $complementoResultado",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            nomeDoPosto = ""
+                            alcool = ""
+                            gasolina = ""
                         },
                         enabled = nomeDoPosto != "" && gasolina != "" && alcool != ""
                     ) {

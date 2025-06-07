@@ -1,13 +1,11 @@
-package com.example.exemplosimplesdecompose.data;
+package com.example.alcoolougasolina.data
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Context
+import android.content.SharedPreferences
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.math.BigDecimal
-import java.nio.charset.StandardCharsets
 import android.util.Base64
 
 class CrudPosto(private val context: Context) {
@@ -28,9 +26,9 @@ class CrudPosto(private val context: Context) {
         editor.apply()
     }
 
-    fun getPosto(id: String): Posto {
+    private fun getPosto(id: String): Posto {
         val base64String = sp.getString(id, null)
-        if (base64String != null && base64String.isNotEmpty()) {
+        if (!base64String.isNullOrEmpty()) {
             val byteData = Base64.decode(base64String, Base64.DEFAULT)
 
             val bis = ByteArrayInputStream(byteData)

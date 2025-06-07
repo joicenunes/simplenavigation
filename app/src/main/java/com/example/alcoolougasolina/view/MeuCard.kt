@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose.view
+package com.example.alcoolougasolina.view
 
 import android.content.Intent
 import android.net.Uri
@@ -27,9 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.exemplosimplesdecompose.data.Posto
-import com.example.exemplosimplesdecompose.ui.theme.Purple40
-import com.example.exemplosimplesdecompose.ui.theme.Purple80
+import com.example.alcoolougasolina.data.Posto
+import com.example.alcoolougasolina.ui.theme.Purple40
+import com.example.alcoolougasolina.ui.theme.Purple80
 
 @Composable
 fun MeuCard(

@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose
+package com.example.alcoolougasolina
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,18 +8,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.exemplosimplesdecompose.ui.theme.ExemploSimplesDeComposeTheme
-import com.example.exemplosimplesdecompose.view.Tabs
+import com.example.alcoolougasolina.ui.theme.AppTheme
+import com.example.alcoolougasolina.view.Tabs
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ExemploSimplesDeComposeTheme {
+            AppTheme {
                 val navController: NavHostController = rememberNavController()
                 NavHost(navController = navController, startDestination = "tabs") {
-                    composable("tabs") { Tabs(navController) }
+                    composable("tabs") { Tabs() }
                 }
             }
         }

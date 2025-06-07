@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose.view
+package com.example.alcoolougasolina.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

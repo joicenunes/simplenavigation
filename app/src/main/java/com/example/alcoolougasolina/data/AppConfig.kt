@@ -1,4 +1,4 @@
-package com.example.exemplosimplesdecompose.data
+package com.example.alcoolougasolina.data
 
 import android.content.Context
 import android.content.SharedPreferences
