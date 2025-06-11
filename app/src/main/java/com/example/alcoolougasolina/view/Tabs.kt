@@ -12,13 +12,14 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.navigation.NavHostController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.example.alcoolougasolina.data.AppConfig
+import com.example.alcoolougasolina.R
 
 @Composable
 fun Tabs() {
@@ -26,8 +27,10 @@ fun Tabs() {
 
     val config = AppConfig(context)
     val lastTab = config.loadIntConfig("selected_tab")
+    val calcular = stringResource(R.string.acao_calcular)
+    val postosSalvos = stringResource(R.string.postos_salvos)
 
-    val tabs = listOf("Calcular", "Postos salvos")
+    val tabs = listOf(calcular, postosSalvos)
 
     var selectedTabIndex by remember { mutableIntStateOf(lastTab) }
 

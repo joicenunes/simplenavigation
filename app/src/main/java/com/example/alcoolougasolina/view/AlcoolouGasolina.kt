@@ -37,7 +37,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.trimmedLength
 import com.example.alcoolougasolina.R
 import com.example.alcoolougasolina.data.AppConfig
 import com.example.alcoolougasolina.data.CrudPosto
@@ -61,7 +60,10 @@ fun AlcoolGasolinaPreco() {
     val placeholderResultado = stringResource(R.string.placeholder_resultado)
     var textoResultado by remember { mutableStateOf(placeholderResultado) }
     val descricao75p = stringResource(R.string.desc_75p)
+    val complementoAdicao = stringResource(R.string.complemento_resultado)
     val complementoResultado = stringResource(R.string.complemento_resultado)
+    val gasolinaCapitalizada = stringResource(R.string.gasolina)
+    val alcoolCapitalizada = stringResource(R.string.alcool)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -102,7 +104,7 @@ fun AlcoolGasolinaPreco() {
             OutlinedTextField(
                 value = nomeDoPosto,
                 onValueChange = { nomeDoPosto = it },
-                label = { Text(stringResource(R.string.campo_nome_posto)) },
+                label = { Text("${stringResource(R.string.campo_nome_posto)} ${stringResource(R.string.opcional)}") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -152,7 +154,7 @@ fun AlcoolGasolinaPreco() {
 
                             Toast.makeText(
                                 context,
-                                "${novoPosto.nome} $complementoResultado",
+                                "${novoPosto.nome} $complementoAdicao",
                                 Toast.LENGTH_SHORT
                             ).show()
                             nomeDoPosto = ""
@@ -163,7 +165,7 @@ fun AlcoolGasolinaPreco() {
                     ) {
                         Icon(
                             Icons.Filled.Add,
-                            "Salvar Posto"
+                            stringResource(R.string.acao_adicao)
                         )
                     }
                 }
@@ -178,18 +180,16 @@ fun AlcoolGasolinaPreco() {
 
                         val fator = if (checkedState) 0.75 else 0.7
 
-                        val melhor = if (resultado > fator) "GASOLINA" else "ÁLCOOL"
+                        val melhor = if (resultado > fator)
+                            gasolinaCapitalizada.uppercase()
+                        else alcoolCapitalizada.uppercase()
 
-                        val inicio = if (nomeDoPosto.trimmedLength() > 0)
-                            "No posto $nomeDoPosto"
-                        else "No posto"
-
-                        textoResultado = "$inicio a melhor escolha é $melhor"
+                        textoResultado = "$complementoResultado $melhor"
                     }
                 },
                 enabled = gasolina != "" && alcool != ""
             ) {
-                Text("Calcular")
+                Text(stringResource(R.string.acao_calcular))
             }
 
             Text(
