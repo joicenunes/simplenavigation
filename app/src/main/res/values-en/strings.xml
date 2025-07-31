@@ -1,2 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+<string name="app_name">Ethanol or Gasoline?</string>
+<string name="alcool">Ethanol</string>
+<string name="gasolina">Gasoline</string>
+<string name="desc_imagem_principal">Main image: Gas Station pump with localization icon</string>
+<string name="campo_preco_gasolina">Gasoline price</string>
+<string name="campo_preco_alcool">Ethanol price</string>
+<string name="campo_nome_posto">Gas Station name</string>
+<string name="opcional">(Optional)</string>
+<string name="placeholder_resultado">Let's calc?</string>
+<string name="desc_75p">Switch to indicate 75%</string>
+<string name="complemento_adicao">added to favorite gas stations!</string>
+<string name="acao_adicao">Save Gas Station</string>
+<string name="acao_salvar">Sabe</string>
+<string name="acao_cancelar">Cancel</string>
+<string name="acao_calcular">Calculate</string>
+<string name="complemento_resultado">In this gas station you should chose</string>
+<string name="acao_mapa">Open the Map</string>
+<string name="simbolo_monetario">U$</string>
+<string name="acao_edicao">Edit</string>
+<string name="acao_exclusao">Remove</string>
+<string name="postos_salvos">Fav GasStations</string>
+<string name="complemento_excluido">removed!</string>
+<string name="complemento_salvo">saved!</string>
+<string name="lista_posto_vazia">There are no gas stations saved</string>
+</resources>
