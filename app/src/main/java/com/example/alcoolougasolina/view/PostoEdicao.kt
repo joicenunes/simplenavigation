@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.alcoolougasolina.data.Posto
 import java.math.BigDecimal
+import com.example.alcoolougasolina.R
 
 @Composable
 fun PostoEdicao(
@@ -32,13 +34,13 @@ fun PostoEdicao(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Editar Posto: ${posto.nome}") },
+        title = { Text("${stringResource(R.string.acao_edicao)} ${posto.nome}") },
         text = {
             Column {
                 OutlinedTextField(
                     value = nome,
                     onValueChange = { nome = it },
-                    label = { Text("Nome do Posto") },
+                    label = { Text(stringResource(R.string.campo_nome_posto)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -70,19 +72,19 @@ fun PostoEdicao(
                 onClick = {
                     val postoAtualizado = posto.copy(
                         nome = nome,
-                        valorGasolina = BigDecimal(gasolina) ?: posto.valorGasolina,
-                        valorAlcool = BigDecimal(alcool) ?: posto.valorAlcool
+                        valorGasolina = BigDecimal(gasolina),
+                        valorAlcool = BigDecimal(alcool)
                     )
                     onSave(postoAtualizado)
                     onDismiss()
                 }
             ) {
-                Text("Salvar")
+                Text(stringResource(R.string.acao_salvar))
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(stringResource(R.string.acao_cancelar))
             }
         }
     )

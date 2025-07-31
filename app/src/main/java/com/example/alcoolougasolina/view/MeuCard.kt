@@ -1,7 +1,6 @@
 package com.example.alcoolougasolina.view
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,10 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.alcoolougasolina.data.Posto
 import com.example.alcoolougasolina.ui.theme.Purple40
 import com.example.alcoolougasolina.ui.theme.Purple80
+import com.example.alcoolougasolina.R
+import androidx.core.net.toUri
 
 @Composable
 fun MeuCard(
@@ -38,6 +40,10 @@ fun MeuCard(
     onDeleteClick: (Posto) -> Unit
 ) {
     val context = LocalContext.current
+    val precoGasolina = stringResource(R.string.campo_preco_gasolina)
+    val precoAlcool = stringResource(R.string.campo_preco_alcool)
+    val simboloMonetario = stringResource(R.string.simbolo_monetario)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,8 +74,7 @@ fun MeuCard(
                     IconButton(
                         onClick = {
                             val url = "geo:${item.coordenadas.latitude},${item.coordenadas.longitude}"
-                            val gmmIntentUri = Uri
-                                .parse(url)
+                            val gmmIntentUri = url.toUri()
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
                                 setPackage("com.google.android.apps.maps")
                             }
@@ -78,7 +83,7 @@ fun MeuCard(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
-                            contentDescription = "Abrir no Mapa",
+                            contentDescription = stringResource(R.string.acao_mapa),
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(80.dp)
                         )
@@ -90,7 +95,7 @@ fun MeuCard(
                 Column {
                     Row {
                         Text(
-                            text = "Valor Gasolina: R$",
+                            text = "$precoGasolina: $simboloMonetario",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -106,7 +111,7 @@ fun MeuCard(
 
                     Row {
                         Text(
-                            text = "Valor Álcool: R$",
+                            text = "$precoAlcool: $simboloMonetario",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -133,7 +138,7 @@ fun MeuCard(
                         Purple80, Purple40, Purple80, Purple40
                     )
                 ) {
-                    Text("Editar")
+                    Text(stringResource(R.string.acao_edicao))
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -141,7 +146,7 @@ fun MeuCard(
                 Button(
                     onClick = { onDeleteClick(item) }
                 ) {
-                    Text("Excluir")
+                    Text(stringResource(R.string.acao_exclusao))
                 }
             }
         }

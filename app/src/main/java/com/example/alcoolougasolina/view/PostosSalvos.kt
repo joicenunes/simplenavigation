@@ -26,6 +26,8 @@ import com.example.alcoolougasolina.ui.theme.Purple40
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.res.stringResource
+import com.example.alcoolougasolina.R
 
 @Composable
 fun PostosSalvos() {
@@ -36,6 +38,9 @@ fun PostosSalvos() {
 
     var showEditDialog by remember { mutableStateOf(false) }
     var postoToEdit by remember { mutableStateOf<Posto?>(null) }
+
+    val complementoExcluido = stringResource(R.string.complemento_excluido)
+    val complementoSalvo = stringResource(R.string.complemento_salvo)
 
     LaunchedEffect (Unit) {
         val loadedPostos = postoService.getTodosPostos()
@@ -68,7 +73,7 @@ fun PostosSalvos() {
                                 postos.remove(itemToRemoveFromList)
                                 Toast.makeText(
                                     context,
-                                    "Posto ${itemToRemoveFromList.nome} excluído!",
+                                    "${itemToRemoveFromList.nome} $complementoExcluido",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -82,7 +87,7 @@ fun PostosSalvos() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Não há postos salvos",
+                    text = stringResource(R.string.lista_posto_vazia),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Purple40,
                     fontSize = 18.sp,
@@ -104,7 +109,11 @@ fun PostosSalvos() {
                 if (index != -1) {
                     postos[index] = updatedPosto
                     postoService.savePosto(updatedPosto)
-                    Toast.makeText(context, "Posto ${updatedPosto.nome} salvo!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "${updatedPosto.nome} $complementoSalvo",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 showEditDialog = false
                 postoToEdit = null

@@ -1,10 +1,26 @@
 <resources>
-    <string name="app_name">Alcool Ou Gasolina</string>
+    <string name="app_name">Álcool Ou Gasolina</string>
+    <string name="alcool">Álcool</string>
+    <string name="gasolina">Gasolina</string>
     <string name="desc_imagem_principal">Imagem principal: Bomba de gasolina com ícone de localização</string>
     <string name="campo_preco_gasolina">Preço da Gasolina</string>
     <string name="campo_preco_alcool">Preço do Álcool</string>
-    <string name="campo_nome_posto">Nome do Posto (Opcional)</string>
+    <string name="campo_nome_posto">Nome do Posto</string>
+    <string name="opcional">(Opcional)</string>
     <string name="placeholder_resultado">Vamos calcular?</string>
     <string name="desc_75p">Switch para indicar 75%</string>
-    <string name="complemento_resultado">adicionado à lista de postos salvos!</string>
+    <string name="complemento_adicao">adicionado à lista de postos salvos!</string>
+    <string name="acao_adicao">Salvar Posto</string>
+    <string name="acao_salvar">Salvar</string>
+    <string name="acao_cancelar">Cancelar</string>
+    <string name="acao_calcular">Calcular</string>
+    <string name="complemento_resultado">Nesse posto a melhor escolha é</string>
+    <string name="acao_mapa">Abrir no Mapa</string>
+    <string name="simbolo_monetario">R$</string>
+    <string name="acao_edicao">Editar</string>
+    <string name="acao_exclusao">Excluir</string>
+    <string name="postos_salvos">Postos Salvos</string>
+    <string name="complemento_excluido">excluído!</string>
+    <string name="complemento_salvo">salvo!</string>
+    <string name="lista_posto_vazia">Não há postos salvos</string>
 </resources>
