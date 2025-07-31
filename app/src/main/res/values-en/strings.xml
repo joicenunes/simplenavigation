@@ -8,7 +8,7 @@
 <string name="campo_preco_alcool">Ethanol price</string>
 <string name="campo_nome_posto">Gas Station name</string>
 <string name="opcional">(Optional)</string>
-<string name="placeholder_resultado">Let's calc?</string>
+<string name="placeholder_resultado">Let\'s calc?</string>
 <string name="desc_75p">Switch to indicate 75%</string>
 <string name="complemento_adicao">added to favorite gas stations!</string>
 <string name="acao_adicao">Save Gas Station</string>
