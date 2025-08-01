@@ -208,8 +208,8 @@ fun AlcoolGasolinaPreco() {
 
                                     val novoPosto = Posto(
                                         nome = nomeDoPosto,
-                                        valorGasolina = gasolina,
-                                        valorAlcool = alcool
+                                        valorGasolina = validateValue(gasolina),
+                                        valorAlcool = validateValue(alcool)
                                     )
 
                                     if (location != null) {
@@ -272,4 +272,8 @@ fun AlcoolGasolinaPreco() {
             )
         }
     }
+}
+
+fun validateValue(value: String): String {
+    return value.replace(",", ".")
 }
