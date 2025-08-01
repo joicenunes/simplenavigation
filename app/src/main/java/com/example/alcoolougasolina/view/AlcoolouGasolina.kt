@@ -69,7 +69,7 @@ fun AlcoolGasolinaPreco() {
     val placeholderResultado = stringResource(R.string.placeholder_resultado)
     var textoResultado by remember { mutableStateOf(placeholderResultado) }
     val descricao75p = stringResource(R.string.desc_75p)
-    val complementoAdicao = stringResource(R.string.complemento_resultado)
+    val complementoSalvo = stringResource(R.string.complemento_salvo)
     val complementoResultado = stringResource(R.string.complemento_resultado)
     val gasolinaCapitalizada = stringResource(R.string.gasolina)
     val alcoolCapitalizada = stringResource(R.string.alcool)
@@ -223,7 +223,7 @@ fun AlcoolGasolinaPreco() {
 
                                     Toast.makeText(
                                         context,
-                                        "${novoPosto.nome} $complementoAdicao",
+                                        "${novoPosto.nome} $complementoSalvo",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     nomeDoPosto = ""

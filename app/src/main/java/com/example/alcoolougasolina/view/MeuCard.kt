@@ -73,7 +73,7 @@ fun MeuCard(
                 Column {
                     IconButton(
                         onClick = {
-                            val url = "geo:${item.coordenadas.latitude},${item.coordenadas.longitude}"
+                            val url = "geo:0,0?q=${item.coordenadas.latitude},${item.coordenadas.longitude}${nameToLabel(item.nome)}"
                             val gmmIntentUri = url.toUri()
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
                                 setPackage("com.google.android.apps.maps")
@@ -151,4 +151,8 @@ fun MeuCard(
             }
         }
     }
+}
+
+fun nameToLabel(name: String): String {
+    return name.replace(" ", "+")
 }
