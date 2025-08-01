@@ -1,5 +1,6 @@
 package com.example.alcoolougasolina.view
 
+import com.example.alcoolougasolina.util.getCurrentLocation
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,14 @@ import com.example.alcoolougasolina.data.CrudPosto
 import com.example.alcoolougasolina.data.Posto
 import com.example.alcoolougasolina.ui.theme.Purple40
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import com.example.alcoolougasolina.data.Coordenadas
+import com.google.android.gms.location.LocationServices
+
 @Composable
 fun AlcoolGasolinaPreco() {
     val context = LocalContext.current
@@ -64,6 +73,54 @@ fun AlcoolGasolinaPreco() {
     val complementoResultado = stringResource(R.string.complemento_resultado)
     val gasolinaCapitalizada = stringResource(R.string.gasolina)
     val alcoolCapitalizada = stringResource(R.string.alcool)
+
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    var lastKnownLocation by remember {
+        mutableStateOf<android.location.Location?>(null)
+    }
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                getCurrentLocation(context, fusedLocationClient) { location ->
+                    lastKnownLocation = location
+                }
+            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                getCurrentLocation(context, fusedLocationClient) { location ->
+                    lastKnownLocation = location
+                }
+            }
+            else -> {
+                Toast
+                    .makeText(context, "Permissão de localização negada.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+    fun checkAndRequestLocationPermissions(onPermissionsGranted: () -> Unit) {
+        val fineLocationPermissionGranted = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val coarseLocationPermissionGranted = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (fineLocationPermissionGranted || coarseLocationPermissionGranted) {
+            onPermissionsGranted()
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -145,21 +202,35 @@ fun AlcoolGasolinaPreco() {
                 Column {
                     Button (
                         onClick = {
-                            val novoPosto = Posto(
-                                nome = nomeDoPosto,
-                                valorGasolina = gasolina,
-                                valorAlcool = alcool
-                            )
-                            postoService.savePosto(novoPosto)
+                            checkAndRequestLocationPermissions {
+                                getCurrentLocation(context, fusedLocationClient) { location ->
+                                    lastKnownLocation = location
 
-                            Toast.makeText(
-                                context,
-                                "${novoPosto.nome} $complementoAdicao",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            nomeDoPosto = ""
-                            alcool = ""
-                            gasolina = ""
+                                    val novoPosto = Posto(
+                                        nome = nomeDoPosto,
+                                        valorGasolina = gasolina,
+                                        valorAlcool = alcool
+                                    )
+
+                                    if (location != null) {
+                                        novoPosto.coordenadas = Coordenadas(
+                                            location.latitude,
+                                            location.longitude
+                                        )
+                                    }
+
+                                    postoService.savePosto(novoPosto)
+
+                                    Toast.makeText(
+                                        context,
+                                        "${novoPosto.nome} $complementoAdicao",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    nomeDoPosto = ""
+                                    alcool = ""
+                                    gasolina = ""
+                                }
+                            }
                         },
                         enabled = nomeDoPosto != "" && gasolina != "" && alcool != ""
                     ) {

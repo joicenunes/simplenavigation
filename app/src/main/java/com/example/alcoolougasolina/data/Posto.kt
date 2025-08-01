@@ -7,7 +7,7 @@ import java.util.UUID
 data class Posto(
     val id: String,
     val nome: String,
-    val coordenadas: Coordenadas,
+    var coordenadas: Coordenadas,
     val valorAlcool: BigDecimal,
     val valorGasolina: BigDecimal
 ): Serializable {

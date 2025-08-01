@@ -52,6 +52,7 @@ fun PostoEdicao(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
+                    label = { Text(stringResource(R.string.campo_preco_gasolina)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -63,6 +64,7 @@ fun PostoEdicao(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
+                    label = { Text(stringResource(R.string.campo_preco_alcool)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
