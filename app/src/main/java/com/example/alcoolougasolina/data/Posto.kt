@@ -1,34 +1,18 @@
 package com.example.alcoolougasolina.data
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.math.BigDecimal
-import java.util.UUID
 
+@Entity(tableName = "postos")
 data class Posto(
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val nome: String,
+    @Embedded
     var coordenadas: Coordenadas,
     val valorAlcool: BigDecimal,
     val valorGasolina: BigDecimal
-): Serializable {
-    // Construtor secundário com coordenadas de Fortaleza
-    constructor(nome: String) : this(
-        id = UUID.randomUUID().toString(),
-        nome,
-        Coordenadas(41.40338, 2.17403),
-        BigDecimal("0.00"),
-        BigDecimal("0.00")
-    )
-
-    constructor(
-        nome: String,
-        valorAlcool: String,
-        valorGasolina: String
-    ) : this(
-        id = UUID.randomUUID().toString(),
-        nome,
-        Coordenadas(41.40338, 2.17403),
-        BigDecimal(valorAlcool),
-        BigDecimal(valorGasolina)
-    )
-}
+): Serializable {}

@@ -1,5 +1,6 @@
 package com.example.alcoolougasolina.view
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import android.widget.Toast
@@ -13,28 +14,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.alcoolougasolina.data.CrudPosto
 import com.example.alcoolougasolina.data.Posto
 import com.example.alcoolougasolina.ui.theme.Purple40
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alcoolougasolina.R
+import com.example.alcoolougasolina.data.viewmodel.PostoViewModel
+import com.example.alcoolougasolina.data.viewmodel.PostoViewModelFactory
 
 @Composable
 fun PostosSalvos() {
     val context = LocalContext.current
-    val postoService = CrudPosto(context)
+    val application = context.applicationContext as Application
+    val postoViewModel: PostoViewModel = viewModel(
+        factory = PostoViewModelFactory(application)
+    )
 
-    val postos: SnapshotStateList<Posto> = remember { mutableStateListOf() } // Use 'val' com delegate 'by' se preferir
+    val postos by postoViewModel.allPostos.collectAsState(initial = emptyList())
 
     var showEditDialog by remember { mutableStateOf(false) }
     var postoToEdit by remember { mutableStateOf<Posto?>(null) }
@@ -42,10 +46,6 @@ fun PostosSalvos() {
     val complementoExcluido = stringResource(R.string.complemento_excluido)
     val complementoSalvo = stringResource(R.string.complemento_salvo)
 
-    LaunchedEffect (Unit) {
-        val loadedPostos = postoService.getTodosPostos()
-        postos.addAll(loadedPostos)
-    }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -69,8 +69,7 @@ fun PostosSalvos() {
                         onDeleteClick = { itemParaExcluir ->
                             val itemToRemoveFromList = postos.find { it.id == itemParaExcluir.id }
                             if (itemToRemoveFromList != null) {
-                                postoService.removePosto(itemToRemoveFromList.id)
-                                postos.remove(itemToRemoveFromList)
+                                postoViewModel.deletar(itemToRemoveFromList)
                                 Toast.makeText(
                                     context,
                                     "${itemToRemoveFromList.nome} $complementoExcluido",
@@ -105,16 +104,12 @@ fun PostosSalvos() {
                 postoToEdit = null
             },
             onSave = { updatedPosto ->
-                val index = postos.indexOfFirst { it.id == updatedPosto.id }
-                if (index != -1) {
-                    postos[index] = updatedPosto
-                    postoService.savePosto(updatedPosto)
-                    Toast.makeText(
-                        context,
-                        "${updatedPosto.nome} $complementoSalvo",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                postoViewModel.atualizar(updatedPosto)
+                Toast.makeText(
+                    context,
+                    "${updatedPosto.nome} $complementoSalvo",
+                    Toast.LENGTH_SHORT
+                ).show()
                 showEditDialog = false
                 postoToEdit = null
             }

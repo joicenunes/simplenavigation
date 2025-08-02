@@ -40,26 +40,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alcoolougasolina.R
 import com.example.alcoolougasolina.data.AppConfig
-import com.example.alcoolougasolina.data.CrudPosto
 import com.example.alcoolougasolina.data.Posto
 import com.example.alcoolougasolina.ui.theme.Purple40
 
 import android.Manifest
+import android.app.Application
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alcoolougasolina.data.Coordenadas
+import com.example.alcoolougasolina.data.viewmodel.PostoViewModel
+import com.example.alcoolougasolina.data.viewmodel.PostoViewModelFactory
 import com.google.android.gms.location.LocationServices
+import java.math.BigDecimal
 
 @Composable
 fun AlcoolGasolinaPreco() {
     val context = LocalContext.current
+    val application = context.applicationContext as Application
 
     val config = AppConfig(context)
     val check = config.loadBooleanConfig("is_75_checked")
 
-    val postoService = CrudPosto(context)
+    val postoViewModel: PostoViewModel = viewModel(
+        factory = PostoViewModelFactory(application)
+    )
 
     var alcool by remember { mutableStateOf("") }
     var gasolina by remember { mutableStateOf("") }
@@ -209,7 +216,8 @@ fun AlcoolGasolinaPreco() {
                                     val novoPosto = Posto(
                                         nome = nomeDoPosto,
                                         valorGasolina = validateValue(gasolina),
-                                        valorAlcool = validateValue(alcool)
+                                        valorAlcool = validateValue(alcool),
+                                        coordenadas = Coordenadas()
                                     )
 
                                     if (location != null) {
@@ -219,7 +227,7 @@ fun AlcoolGasolinaPreco() {
                                         )
                                     }
 
-                                    postoService.savePosto(novoPosto)
+                                    postoViewModel.inserir(novoPosto)
 
                                     Toast.makeText(
                                         context,
@@ -274,6 +282,6 @@ fun AlcoolGasolinaPreco() {
     }
 }
 
-fun validateValue(value: String): String {
-    return value.replace(",", ".")
+fun validateValue(value: String): BigDecimal {
+    return BigDecimal(value.replace(",", "."))
 }
